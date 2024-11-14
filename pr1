@@ -1,0 +1,76 @@
+import pygame
+import random
+
+# إعدادات اللعبة
+pygame.init()
+screen = pygame.display.set_mode((800, 600))
+pygame.display.set_caption("لعبة الحظ")
+
+# الألوان
+white = (255, 255, 255)
+black = (0, 0, 0)
+
+# إعدادات النصوص
+font = pygame.font.Font(None, 36)
+
+# الفرق
+teams = ["Team 1", "Team 2", "Team 3", "Team 4", "Team 5", "Team 6", "Team 7", "Team 8"]
+coins = 100  # رصيد اللاعب من العملات
+bet_amount = 10  # يمكنك ضبط هذا القيمة
+chosen_team = None
+
+# وظائف مساعدة
+def draw_text(text, pos, color=black):
+    text_surface = font.render(text, True, color)
+    screen.blit(text_surface, pos)
+
+def display_teams():
+    for i, team in enumerate(teams):
+        draw_text(f"{i + 1}. {team}", (50, 100 + i * 50))
+
+running = True
+while running:
+    screen.fill(white)
+
+    # عرض الرصيد الحالي
+    draw_text(f"رصيدك الحالي: {coins} عملة", (50, 50))
+
+    # عرض الفرق للاختيار
+    display_teams()
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_1:
+                chosen_team = teams[0]
+            elif event.key == pygame.K_2:
+                chosen_team = teams[1]
+            elif event.key == pygame.K_3:
+                chosen_team = teams[2]
+            elif event.key == pygame.K_4:
+                chosen_team = teams[3]
+            elif event.key == pygame.K_5:
+                chosen_team = teams[4]
+            elif event.key == pygame.K_6:
+                chosen_team = teams[5]
+            elif event.key == pygame.K_7:
+                chosen_team = teams[6]
+            elif event.key == pygame.K_8:
+                chosen_team = teams[7]
+    
+    if chosen_team is not None:
+        winning_team = random.choice(teams)
+        if chosen_team == winning_team:
+            coins += bet_amount * 2
+            draw_text(f"مبروك! فاز فريقك {chosen_team}. رصيدك الحالي: {coins} عملة", (50, 500))
+        else:
+            coins -= bet_amount
+            draw_text(f"للأسف، لم يفز فريقك. الفريق الفائز هو {winning_team}. رصيدك الحالي: {coins} عملة", (50, 500))
+
+        chosen_team = None  # إعادة ضبط الفريق المختار
+
+    pygame.display.flip()
+    pygame.time.delay(1000)  # لتحديث الشاشة كل ثانية واحدة
+
+pygame.quit()
